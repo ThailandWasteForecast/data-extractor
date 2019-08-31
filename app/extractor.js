@@ -1,17 +1,26 @@
 import minimist from 'minimist';
 import xlsx from 'xlsx';
-import logger from './logger';
-import extractCoreData from './extractorCoreData';
+import { promises as fs } from 'fs';
 
-function dispatch(workbook, dataType) {
+import logger from './logger';
+import { extractCoreData, convertToCsv } from './extractCoreData';
+
+function extractByDataType(workbook, dataType) {
   switch (dataType) {
     case 'core': return extractCoreData(workbook);
-    // case 'pop': return extractPopData(workbook);
     default: return null;
   }
 }
 
-function app() {
+function convertToCsvByDataType(dataRows, dataType) {
+  switch (dataType) {
+    case 'core': return convertToCsv(dataRows);
+
+    default: return null;
+  }
+}
+
+async function app() {
   const argv = minimist(process.argv.slice(2));
 
   if (!argv.input || !argv.output || !argv.data) {
@@ -21,7 +30,10 @@ function app() {
   }
 
   const workbook = xlsx.readFile(argv.input);
-  dispatch(workbook, argv.data);
+  const dataRows = extractByDataType(workbook, argv.data);
+  const csv = convertToCsvByDataType(dataRows, argv.data);
+
+  await fs.writeFile(argv.output, csv);
 }
 
 export default app;

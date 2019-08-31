@@ -54,18 +54,13 @@ const columnMaps = [{
   field: fieldNames.municipalSizeSqkm,
 }];
 
-const columnLookup = columnMaps.reduce((lookup, cm) => ({
-  ...lookup,
-  [cm.field]: cm.column,
-}), {});
-
 function isRowDataEmpty(rowData) {
   return Object.keys(rowData).every((key) => rowData[key] === null);
 }
 
 function extractColumnData(sheet, row, col) {
   const data = sheet[`${col}${row}`];
-  return data ? data.h : null;
+  return data ? data.v : null;
 }
 
 function extractRowData(sheet, row) {
@@ -76,30 +71,30 @@ function extractRowData(sheet, row) {
 }
 
 function extractAllRows(sheet, startRow) {
-  let row = startRow;
-  const rowDataList = [];
+  const dataRows = [];
   const forever = true;
 
   while (forever) {
+    const row = startRow + dataRows.length;
     const rowData = extractRowData(sheet, row);
     if (isRowDataEmpty(rowData)) {
-      return rowDataList;
+      return dataRows;
     }
 
-    rowDataList.push(rowData);
-    row += 1;
+    dataRows.push(rowData);
   }
 
-  return rowDataList;
+  return dataRows;
 }
 
-function extractCoreData(workbook) {
+export function extractCoreData(workbook) {
   const sheet = workbook.Sheets[SHEET_NAME];
-  const dataRows = extractAllRows(sheet, START_ROW);
-
-  console.log(dataRows);
-
-  return null;
+  return extractAllRows(sheet, START_ROW);
 }
 
-export default extractCoreData;
+export function convertToCsv(dataRows) {
+  return [
+    columnMaps.map((cm) => cm.field).join(', '),
+    ...dataRows.map((dataRow) => columnMaps.map((cm) => dataRow[cm.field]).join(', ')),
+  ].join('\r\n');
+}
