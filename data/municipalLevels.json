@@ -1,0 +1,14 @@
+[
+  {
+    "LEVEL_TYPE": "metropolis",
+    "LEVEL_NAME": "เทศบาลนคร"
+  },
+  {
+    "LEVEL_TYPE": "city",
+    "LEVEL_NAME": "เทศบาลเมือง"
+  },
+  {
+    "LEVEL_TYPE": "locality",
+    "LEVEL_NAME": "เทศบาลตำบล"
+  }
+]

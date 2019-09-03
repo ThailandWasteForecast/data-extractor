@@ -1,0 +1,14 @@
+[
+  {
+    "SIZE_TYPE": "large",
+    "SIZE_NAME": "ใหญ่"
+  },
+  {
+    "SIZE_TYPE": "medium",
+    "SIZE_NAME": "กลาง"
+  },
+  {
+    "SIZE_TYPE": "small",
+    "SIZE_NAME": "เล็ก"
+  }
+]
